@@ -1,4 +1,4 @@
-from const_predprice import BASE_COLS, TARGET_COLS, DEPTH, PREDICT_LAG, BATCH_SIZE
+from const_predprice import BASE_COLS, TARGET_COLS, DEPTH, PREDICT_LAG
 from constants import FUTURE, GLASS_COLS, MAKE_LOG
 from utils import csv2df, clean_dataset, future_sequence
 import numpy as np # библиотека нампи
