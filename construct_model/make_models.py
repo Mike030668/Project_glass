@@ -3,6 +3,8 @@ from prepare_data.constants import GLASS_COLS
 
 GLASS = len(GLASS_COLS)
 
+model_prepprice_path_colab = "/content/drive/Othercomputers/My_comp/Документы/Note_books/Тестовые работы/Alex_Glass/Project_glass/predprice/model"
+
 def baseline(input_shape,
               pred_num,
               activ_out,
