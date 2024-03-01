@@ -43,21 +43,20 @@ def future_sequence(x_data, predict_lag):
     return np.array(y)
 
 
-def split_sequence(x_data, y_data, seq_len, predict_lag):
+def split_sequence(x_data, y_data, seq_len, predict_lags):
     """
-    Функция разделения набора данных на выборки для обучения нейросети
-    x_data - набор входных данных
-    y_data - набор выходных данных
-    seq_len - длина серии (подпоследовательности) входных данных для анализа
-    predict_lag - количество шагов в будущее для предсказания
-    
+    # Функция разделения набора данных на выборки для обучения нейросети
+    # x_data - набор входных данных
+    # y_data - набор выходных данных
+    # seq_len - длина серии (подпоследовательности) входных данных для анализа
+    # predict_lags - количество шагов в будущее для предсказания
     """
     # Определение максимального индекса начала подпоследовательности
-    x_len = x_data.shape[0] - seq_len - (predict_lag - 1)
+    x_len = x_data.shape[0] - seq_len - (predict_lags - 1)
     # Формирование подпоследовательностей входных данных
     x = [x_data[i:i + seq_len] for i in range(x_len)]
     # Формирование меток выходных данных,
     # отстоящих на predict_lag шагов после конца подпоследовательности
-    y = [y_data[i+ predict_lag + seq_len -1] for i in range(x_len)]
+    y = [[y_data[i+ lag + seq_len -1] for lag in range(predict_lags)] for i in range(x_len)]
     # Возврат результатов в виде массивов numpy
     return np.array(x), np.array(y)

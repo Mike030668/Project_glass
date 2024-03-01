@@ -5,7 +5,6 @@ import numpy as np # библиотека нампи
 import joblib
 # Нормировщики
 from sklearn.preprocessing import MinMaxScaler
-import tensorflow as tf           # библиотека машинного обучения
 
 
 
