@@ -118,3 +118,53 @@ def auto_corr(pred_lags: list, corr_steps: list, y_pred: list, y_true: list,
   # Если нужно вернуть массивы автокорреляции
   if return_data:
     return corr, own_corr
+
+
+
+def confusion_matrix(y_true, y_pred, labels=None, normalize=None,
+                     cmap="Blues", encoded_labels=True,
+                     plot=True, verbose = False,
+                     figsize = (10,10)
+                     ):
+    """
+    Args:
+        y_true (ndarray)
+        y_pred (ndarray)
+        labels (list)
+        normalise (str) : {'all', None}
+        cmap (maplotlib.pyplot.cmap)
+        encoded_labels (bool): Need to be False if labels are not one hot encoded
+        plot (bool): If False, plot will not appear for confusion matrix
+
+    Return:
+        conf_mat (tuple): TN, FP, FN, TP
+    """
+
+    import seaborn as sns
+    from sklearn.metrics import confusion_matrix
+
+    if normalize not in ('all', None):
+        raise ValueError("normalize must be one of {'all', None}")
+
+    conf_labels = None if encoded_labels else labels
+    fmt = 'g' if normalize == None else '.2%'
+
+    conf_mat = confusion_matrix(y_true, y_pred, normalize=normalize, labels=conf_labels)
+
+    if plot:
+        plt.figure(figsize = figsize)
+        ax = sns.heatmap(conf_mat, cmap=cmap,
+                         square=True, cbar=False,
+                         annot=True, fmt=fmt,
+                         annot_kws={'fontsize': int(figsize[0]*1.7),
+                                    'fontweight': 'bold',
+                                    'fontfamily': 'serif',
+                                    }
+                         )
+        ax.set_title("Confusion Matrix", fontsize=int(figsize[0]*1.7))
+        ax.set_xlabel("Predicted", fontsize=int(figsize[0]*1.5), color = "orange")
+        ax.set_ylabel("Actual", fontsize=int(figsize[0]*1.5), color = "orange")
+        if labels != None:
+            ax.set_yticklabels(labels,  fontsize=int(figsize[0])*1.7)
+            ax.set_xticklabels(labels,  fontsize=int(figsize[0])*1.7)
+    if verbose: return conf_mat
