@@ -27,13 +27,37 @@ def csv2df(path: str):
     return pd.read_csv(path, index_col=0, parse_dates=True ) 
 
     
-# Функция разделения набора данных на выборки для обучения нейросети
-# x_data - набор входных данных
-# predict_lag - количество шагов в будущее для предсказания
+
 def future_sequence(x_data, predict_lag):
+    """
+    Функция разделения набора данных на выборки для обучения нейросети
+    x_data - набор входных данных
+    predict_lag - количество шагов в будущее для предсказания
+    
+    """
     # Определение максимального индекса
     y_len = x_data.shape[0] - (predict_lag - 1)
     # отстоящих на predict_lag шагов вперед
     y = [x_data[i:i+ predict_lag] for i in range(y_len)]
     # Возврат результатов в виде массивов numpy
     return np.array(y)
+
+
+def split_sequence(x_data, y_data, seq_len, predict_lag):
+    """
+    Функция разделения набора данных на выборки для обучения нейросети
+    x_data - набор входных данных
+    y_data - набор выходных данных
+    seq_len - длина серии (подпоследовательности) входных данных для анализа
+    predict_lag - количество шагов в будущее для предсказания
+    
+    """
+    # Определение максимального индекса начала подпоследовательности
+    x_len = x_data.shape[0] - seq_len - (predict_lag - 1)
+    # Формирование подпоследовательностей входных данных
+    x = [x_data[i:i + seq_len] for i in range(x_len)]
+    # Формирование меток выходных данных,
+    # отстоящих на predict_lag шагов после конца подпоследовательности
+    y = [y_data[i+ predict_lag + seq_len -1] for i in range(x_len)]
+    # Возврат результатов в виде массивов numpy
+    return np.array(x), np.array(y)
