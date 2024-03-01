@@ -4,7 +4,7 @@ from prepare_data.constants import GLASS_COLS
 GLASS = len(GLASS_COLS)
 
 model_prepprice_path_colab = "/content/drive/Othercomputers/My_comp/Документы/Note_books/Тестовые работы/Alex_Glass/Project_glass/predprice/model"
-model_trendprice_path_colab = "/content/drive/Othercomputers/My_comp/Документы/Note_books/Тестовые работы/Alex_Glass/Project_glass/predtrend/model"
+model_trendpath_colab = "/content/drive/Othercomputers/My_comp/Документы/Note_books/Тестовые работы/Alex_Glass/Project_glass/predtrend/model"
 
 def baseline(input_shape,
               pred_num,
