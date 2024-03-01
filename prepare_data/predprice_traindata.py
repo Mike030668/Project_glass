@@ -1,5 +1,5 @@
-from const_predprice import BASE_COLS, TARGET_COLS, DEPTH, PREDICT_LAG
-from constants import FUTURE, GLASS_COLS, MAKE_LOG
+from const_predprice import BASE_COLS, TARGET_COLS, MAKE_LOG_TARGET
+from constants import FUTURE, GLASS_COLS, MAKE_LOG_VOL, DEPTH, PREDICT_LAG
 from utils import csv2df, clean_dataset, future_sequence
 import numpy as np # библиотека нампи
 import joblib
@@ -22,6 +22,9 @@ def main():
     # колонки для тренировочной выборки
     TRAIN_COLUMNS = BASE_COLS + GLASS_COLS
     GLASS = len(GLASS_COLS)
+
+    if MAKE_LOG_VOL: 
+       dataset["Volume"] = dataset["Volume"].apply(lambda x: np.log(x))
 
     # Делим данные на тренировочную и тестовую выборки
     x_train, x_val = dataset[TRAIN_COLUMNS][:TRAIN_LEN - PREDICT_LAG + 1].values, \
@@ -49,7 +52,7 @@ def main():
     y_val =  future_sequence(dataset[TARGET_COLS][TRAIN_LEN + DEPTH + 2:], PREDICT_LAG).squeeze()
 
     # делаем ли np.log для у
-    if MAKE_LOG:
+    if MAKE_LOG_TARGET:
       y_train = np.log(y_train)  # заменяем  y_train на log(y_train)
       y_val = np.log(y_val)      # заменяем  y_val на log(y_val)
 
