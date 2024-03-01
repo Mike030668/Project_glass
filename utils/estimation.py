@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt # библиотека матплотлиб для отрисовки
 import numpy as np # библиотека нампи
-from prepare_data.constants import MAKE_LOG
+from prepare_data.const_predprice import MAKE_LOG_TARGET
 
 # Функция рассчитываем результаты прогнозирования сети
 def get_scalepred(model: object, x: list, y: list, у_scaler: object):
@@ -19,7 +19,7 @@ def get_scalepred(model: object, x: list, y: list, у_scaler: object):
   # И возвращаем исходны масштаб данных, до нормализации
   y_pred = у_scaler.inverse_transform(model.predict(x))
   y_true = у_scaler.inverse_transform(y)
-  if MAKE_LOG:
+  if MAKE_LOG_TARGET:
     y_pred = np.exp(y_pred)
     y_true = np.exp(y_true)
   return (y_pred, y_true)
