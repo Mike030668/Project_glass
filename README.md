@@ -1,4 +1,4 @@
-# **Проект по работе с биржквыми данными включая "стакан"**
+# **Проект по работе с биржевыми данными включая "стакан"**
 
 <img src="images/glass.png" alt="png"  width="400"/> <img src="images/movi_glass.gif" alt="gif"  width="400"/> 
 
