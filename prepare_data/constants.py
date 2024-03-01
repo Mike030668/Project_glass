@@ -21,4 +21,7 @@ MAIN_COLS = ['Open', 'High', 'Low', 'Close', 'Volume', 'Rsi', 'Tkr Buy', 'Tkr Se
 
 # point for test models on data
 FUTURE = 2800
-MAKE_LOG = True
+DEPTH = 32          # Анализируем по DIFFBACK прошедшим точкам
+PREDICT_LAG = 5     # на сколько шагов вперед
+BATCH_SIZE = 64
+MAKE_LOG_VOL = True

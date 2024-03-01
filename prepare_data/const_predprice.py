@@ -9,6 +9,6 @@ BASE_COLS = ['Open', 'High', 'Low', 'Volume', 'Rsi', 'Tkr Buy', 'Tkr Sell',
 # for model predict Close
 TARGET_COLS = ['Close']
 
-DEPTH = 32          # Анализируем по DIFFBACK прошедшим точкам
-PREDICT_LAG = 5     # на сколько шагов вперед
-BATCH_SIZE = 64
+MAKE_LOG_TARGET = True
+
+
