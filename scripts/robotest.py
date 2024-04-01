@@ -74,7 +74,8 @@ def making_signals(past_df: pd.DataFrame,
         "pred_prices" : [[]],
         "pred_trend" : [[]]
                     }
-
+    
+    price_earth = []
     # итеррируемся по длине изучаемого датафрейма
     # берем на страте прошлые данные
     for i in tqdm(range(check_df.shape[0]-pred_lag), unit ="step",
@@ -106,6 +107,8 @@ def making_signals(past_df: pd.DataFrame,
         #last_state["pred_prices"] = pred_price[0].astype(float)
         last_state["pred_prices"].append(pred_price[0].astype(float))
 
+        price_earth.append(pred_price[0][0].astype(float))
+
         # обогащаем данные по аналогии как готовили для убучени
         to_pred_trend = prepare_data(df_in = check_data,
                                       depth = depth, #DEPTH ,    # ранее заданная глубина сбора данных в прошлое
@@ -124,6 +127,10 @@ def making_signals(past_df: pd.DataFrame,
           last_state["pred_trend"] = last_state["pred_trend"][-2:]
           to_action = fun_action(last_state, cond_long, cond_short)
           all_actions.append(to_action)
+
+          delta = last_state["pred_prices"][-1][0] - last_state["pred_prices"][-2][1]
+          price_earth.append(pred_price[0][0].astype(float) - delta)
+
           if show_unique_signals:
                 # раскомитить чтобы выводило to_action
                 if to_action[0] != to_action[0]: print(to_action)
@@ -136,5 +143,6 @@ def making_signals(past_df: pd.DataFrame,
     df_signal = check_df[pred_lag:].copy()
     df_signal['to_long']  = all_actions[:, 0]
     df_signal['to_short'] = all_actions[:, 1]
+    df_signal['pred_earth_price'] =  price_earth
     # берем чистые действия действия
     return  df_signal
