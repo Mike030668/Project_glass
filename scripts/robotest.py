@@ -50,7 +50,7 @@ def making_signals(past_df: pd.DataFrame,
                     features_price: list,
                     features_trend: list,
                     #use_force_action = False,
-                    #show_unique_signals = True,
+                    show_unique_signals = True,
                     ):
 
     """
@@ -124,8 +124,9 @@ def making_signals(past_df: pd.DataFrame,
           last_state["pred_trend"] = last_state["pred_trend"][-2:]
           to_action = fun_action(last_state, cond_long, cond_short)
           all_actions.append(to_action)
-          # раскомитить чтобы выводило to_action
-          if sum(to_action): print(to_action)
+          if show_unique_signals:
+                # раскомитить чтобы выводило to_action
+                if to_action[0] != to_action[0]: print(to_action)
 
 
 
