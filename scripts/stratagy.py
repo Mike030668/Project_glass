@@ -1,5 +1,6 @@
 # Библиотеки backtesting
 from backtesting import Strategy
+import numpy as np # библиотека нампи
 
 class Long_Strategy(Strategy):
 
