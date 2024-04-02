@@ -17,20 +17,30 @@ def cond_long (state,
     id_pr_lw - id предсказаний ниже текущей цены [0,1,3] из индексов [0,1,2,3,4]
     id_tr_lw - тренд падения id из индексов [0,1,2,3,4]
     correct_price - корректируем ли цену сравнивая прошлое и текцщее
+                    cur_price - по разнице предскахания с текущей
+                    pred_prices - по разнице предскаханий с шага t и t-1
+                    False - не корректируем
+
     id_pr_up_tresh - id предсказаний выше текущей с учетом tresh_hold
     id_tr_lw_tresh - id предсказаний ниже текущей цены с учетом tresh_hold
     tresh_hold - в % от cur_price
     """
-    cur_price = state["last_price"]
+    cur_price = state["last_price"] #[-1]
+    # коррекция 0
     delta = 0
-    if correct_price:
-        delta = state["pred_prices"][-1][0] - state["pred_prices"][-2][1]
+    # корректор предсказания цены от сравнения прошлого предсказание и текцщей цены
+    if correct_price == "cur_price":
+        delta = state["pred_prices"][-2][0] - cur_price
+    # корректор предсказания цены от сравнения прошлого предсказание и текцщего предсказания следующей цены
+    elif correct_price == "pred_price":
+        delta = state["pred_prices"][-2][1] - state["pred_prices"][-1][0]
+
     # Вход лонг
     # Покупаем когда
     # контроль по цене если заданы индексы
     if len(id_pr_up):
         # Сетка 1 показывает id_pr_up предсказаний выше текущей цены И
-        cond_1 =  all(state["pred_prices"][-1][id_pr_up] + delta > cur_price)
+        cond_1 =  all(state["pred_prices"][-1][id_pr_up] - delta > cur_price)
     # одобряем если нет контроля
     else:
         cond_1 = True
@@ -38,7 +48,7 @@ def cond_long (state,
     # контроль по цене c tresh_hold если заданы индексы
     if len(id_pr_up_tresh):
         # Сетка 1 показывает id_pr_up предсказаний выше текущей цены И
-        cond_1_t =  all(state["pred_prices"][-1][id_pr_up_tresh] + delta > cur_price*(100 + tresh_hold)/100)
+        cond_1_t =  all(state["pred_prices"][-1][id_pr_up_tresh] - delta > cur_price*(100 + tresh_hold)/100)
     # одобряем если нет контроля
     else:
         cond_1_t = True
@@ -62,7 +72,7 @@ def cond_long (state,
     # контроль по цене если заданы индексы
     if len(id_pr_lw):
         # Сетка 1 показывает id_pr_lw предсказания ниже текущей цены И
-        cond_5 =  all(state["pred_prices"][-1][id_pr_lw] + delta < cur_price)
+        cond_5 =  all(state["pred_prices"][-1][id_pr_lw] - delta < cur_price)
     # одобряем если нет контроля
     else:
         cond_5 = True
@@ -70,7 +80,7 @@ def cond_long (state,
     # контроль по цене c tresh_hold если заданы индексы
     if len(id_tr_lw_tresh):
         # Сетка 1 показывает id_pr_up предсказаний выше текущей цены И
-        cond_5_t =  all(state["pred_prices"][-1][id_tr_lw_tresh] + delta < cur_price*(100 - tresh_hold)/100)
+        cond_5_t =  all(state["pred_prices"][-1][id_tr_lw_tresh] - delta < cur_price*(100 - tresh_hold)/100)
     # одобряем если нет контроля
     else:
         cond_5_t = True
@@ -93,9 +103,9 @@ def cond_long (state,
     exit_long = cond_5 and cond_8 and cond_5_t
 
     # Вход лонг
-    if enter_long and not exit_long : return 1  #
+    if enter_long and not exit_long : return 1  #  
     # Выход из лонга
-    elif exit_long and not enter_long : return -1  # 
+    elif exit_long and not enter_long : return -1  #  
     # спим
     else:  return 0
 
@@ -118,20 +128,30 @@ def cond_short(state,
     id_pr_lw - id предсказаний ниже текущей цены [0,1,3] из индексов [0,1,2,3,4]
     id_tr_lw - тренд падения id из индексов [0,1,2,3,4]
     correct_price - корректируем ли цену сравнивая прошлое и текцщее
+                    cur_price - по разнице предскахания с текущей
+                    pred_prices - по разнице предскаханий с шага t и t-1
+                    False - не корректируем
+
     id_pr_up_tresh - id предсказаний выше текущей с учетом tresh_hold
     id_tr_lw_tresh - id предсказаний ниже текущей цены с учетом tresh_hold
     tresh_hold - в % от cur_price
     """
-    cur_price = state["last_price"]
+    cur_price = state["last_price"]#[-1]
+    # коррекция 0
     delta = 0
-    if correct_price:
-        delta = state["pred_prices"][-1][0] - state["pred_prices"][-2][1]
+    # корректор предсказания цены от сравнения прошлого предсказание и текцщей цены
+    if correct_price == "cur_price":
+        delta = state["pred_prices"][-2][0] - cur_price
+    # корректор предсказания цены от сравнения прошлого предсказание и текцщего предсказания следующей цены
+    elif correct_price == "pred_price":
+        delta = state["pred_prices"][-2][1] - state["pred_prices"][-1][0]
+
     # Вход шорт
     # Покупаем когда
      # контроль по цене если заданы индексы
     if len(id_pr_lw):
         # Сетка 1 показывает id_pr_lw предсказаний ниже текущей цены И
-        cond_1 =  all(state["pred_prices"][-1][id_pr_lw] + delta < cur_price)
+        cond_1 =  all(state["pred_prices"][-1][id_pr_lw] - delta < cur_price)
     # одобряем если нет контроля
     else:
         cond_1 = True
@@ -139,7 +159,7 @@ def cond_short(state,
     # контроль по цене c tresh_hold если заданы индексы
     if len(id_tr_lw_tresh):
         # Сетка 1 показывает id_pr_lw предсказаний ниже текущей цены И
-        cond_1_t =  all(state["pred_prices"][-1][id_tr_lw_tresh] + delta < cur_price*(100 - tresh_hold)/100)
+        cond_1_t =  all(state["pred_prices"][-1][id_tr_lw_tresh] - delta < cur_price*(100 - tresh_hold)/100)
     # одобряем если нет контроля
     else:
         cond_1_t = True
@@ -163,7 +183,7 @@ def cond_short(state,
     # контроль по цене если заданы индексы
     if len(id_pr_up):
         # Сетка 1 показывает id_pr_up предсказания выше текущей цены  И
-        cond_5 =  all(state["pred_prices"][-1][id_pr_up] + delta > cur_price)
+        cond_5 =  all(state["pred_prices"][-1][id_pr_up] - delta > cur_price)
     # одобряем если нет контроля
     else:
         cond_5 = True
@@ -171,7 +191,7 @@ def cond_short(state,
     # контроль по цене c tresh_hold если заданы индексы
     if len(id_pr_up_tresh):
         # Сетка 1 показывает id_pr_up_tresh предсказания выше текущей цены  И
-        cond_5_t =  all(state["pred_prices"][-1][id_pr_up_tresh] + delta > cur_price*(100 + tresh_hold)/100)
+        cond_5_t =  all(state["pred_prices"][-1][id_pr_up_tresh] - delta > cur_price*(100 + tresh_hold)/100)
     # одобряем если нет контроля
     else:
         cond_5_t = True
@@ -193,9 +213,9 @@ def cond_short(state,
     exit_short = cond_5 and con_8 and cond_5_t
 
     # Вход шорта
-    if enter_short and not exit_short : return -1 # 
+    if enter_short and not exit_short: return -1 #  
     # Выход из шорта
-    elif exit_short and not enter_short: return 1 #  
+    elif exit_short and not enter_short: return 1 #   
     # спим
     else:  return 0
     
@@ -243,6 +263,6 @@ def long_Short(action,
       if action == 'long' : return [long_act, 0]
       elif action == 'short' : return [0, short_act]
       else:
-          return  [long_act, short_act]
+          return  [long_act, short_act], correct_price
       
     return mix_action

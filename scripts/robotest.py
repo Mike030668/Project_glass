@@ -70,12 +70,14 @@ def making_signals(past_df: pd.DataFrame,
     all_actions = [[0, 0]]
     # сбор последнего активного действия и цены
     last_state = {
-        "last_price" : 0,
+        "last_price" : 0, #[], #
         "pred_prices" : [[]],
         "pred_trend" : [[]]
                     }
     
-    price_earth = []
+    prices_pred_earth = []
+    prices_pred = []
+    trend_pred = []
     # итеррируемся по длине изучаемого датафрейма
     # берем на страте прошлые данные
     for i in tqdm(range(check_df.shape[0]-pred_lag), unit ="step",
@@ -102,12 +104,8 @@ def making_signals(past_df: pd.DataFrame,
         # предсказание модели price
         pred_price = model_price.predict(to_pred_price, verbose=False)
         pred_price = scalers_price[2].inverse_transform(pred_price)
+        if make_log_tgt : pred_price = np.exp(pred_price) 
         last_state["pred_prices"].append(pred_price[0].astype(float))
-        if make_log_tgt : pred_price = np.exp(pred_price) #MAKE_LOG_TARGET
-
-        if not i:
-          # собираем историю pred_prices и price
-          price_earth.append(pred_price[0][0].astype(float))
 
 
         # обогащаем данные по аналогии как готовили для убучени
@@ -123,34 +121,48 @@ def making_signals(past_df: pd.DataFrame,
         pred_trend = tresh_trend(pred_trend, trsh_d = -0.1, trsh_u = 0.1)
         last_state["pred_trend"].append(pred_trend)
 
+        if not i:
+          # собираем историю pred_prices и price
+          prices_pred_earth.append(pred_price[0][0].astype(float))
+          prices_pred.append(pred_price[0][0].astype(float))
+          trend_pred.append(pred_trend[0])
+
         if i:
-          last_state["pred_prices"] = last_state["pred_prices"][-2:]
-          last_state["pred_trend"] = last_state["pred_trend"][-2:]
-          to_action = fun_action(last_state, cond_long, cond_short)
-          all_actions.append(to_action)
+            last_state["pred_prices"] = last_state["pred_prices"][-2:]
+            last_state["pred_trend"] = last_state["pred_trend"][-2:]
+            
+            # получаем сигнаты и используемую коррекцию предсказания
+            to_action, used_correction = fun_action(last_state, cond_long, cond_short)
+            all_actions.append(to_action)
 
-          delta = last_state["pred_prices"][-1][0] - last_state["pred_prices"][-2][1]
-          price_earth.append(pred_price[0][0].astype(float) - delta)
+            # коррекция 0
+            delta = 0
+            # корректор предсказания цены от сравнения прошлого предсказание и текцщей цены
+            if used_correction == "cur_price":
+                delta = last_state["pred_prices"][-2][0] -  price
+            # корректор предсказания цены от сравнения прошлого предсказание и текцщего предсказания следующей цены
+            elif used_correction == "pred_price":
+                delta = last_state["pred_prices"][-2][1] - last_state["pred_prices"][-1][0]
 
-          if show_unique_signals:
-                # раскомитить чтобы выводило to_action
-                if to_action[0] != to_action[0]: print(to_action)
+            # собираем историю pred_prices и price
+            prices_pred_earth.append(float(pred_price[0][0].astype(float) - delta))
+            prices_pred.append(pred_price[0][0].astype(float))
+            trend_pred.append(pred_trend[0])
 
-        #print("all_actions",len(all_actions))
-        #print("price_earth",len(price_earth))
-
+            if show_unique_signals:
+                  # раскомитить чтобы выводило to_action
+                  if sum(to_action): print(to_action)
 
     # переводим классы сигналов в массив сигналов
     all_actions = np.vstack(all_actions)
-    #print("all_actions",len(all_actions))
-    #print("price_earth",len(price_earth))
 
     # смещаем на pred_lag
     df_signal = check_df[pred_lag:].copy()
-    #print("df_signal", df_signal.shape)
 
     df_signal['to_long']  = all_actions[:, 0]
     df_signal['to_short'] = all_actions[:, 1]
-    df_signal['pred_earth_price'] = price_earth
+    df_signal['pred_price'] = prices_pred
+    df_signal['pred_earth_price'] = prices_pred_earth
+    df_signal['pred_trend'] = trend_pred
     # берем чистые действия действия
     return  df_signal
