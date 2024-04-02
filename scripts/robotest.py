@@ -80,6 +80,7 @@ def making_signals(past_df: pd.DataFrame,
     # берем на страте прошлые данные
     for i in tqdm(range(check_df.shape[0]-pred_lag), unit ="step",
                       desc ="Пробегаемся по всем отсчетам"):
+
         if not i: # берем на страте прошлые данные
             check_data = past_df.copy()
         # далее отшипываем вначале 1 свечу
@@ -101,13 +102,13 @@ def making_signals(past_df: pd.DataFrame,
         # предсказание модели price
         pred_price = model_price.predict(to_pred_price, verbose=False)
         pred_price = scalers_price[2].inverse_transform(pred_price)
-
-        if make_log_tgt : pred_price = np.exp(pred_price) #MAKE_LOG_TARGET
-        # собираем историю pred_prices и price
-        #last_state["pred_prices"] = pred_price[0].astype(float)
         last_state["pred_prices"].append(pred_price[0].astype(float))
+        if make_log_tgt : pred_price = np.exp(pred_price) #MAKE_LOG_TARGET
 
-        price_earth.append(pred_price[0][0].astype(float))
+        if not i:
+          # собираем историю pred_prices и price
+          price_earth.append(pred_price[0][0].astype(float))
+
 
         # обогащаем данные по аналогии как готовили для убучени
         to_pred_trend = prepare_data(df_in = check_data,
@@ -135,14 +136,21 @@ def making_signals(past_df: pd.DataFrame,
                 # раскомитить чтобы выводило to_action
                 if to_action[0] != to_action[0]: print(to_action)
 
+        #print("all_actions",len(all_actions))
+        #print("price_earth",len(price_earth))
 
 
     # переводим классы сигналов в массив сигналов
     all_actions = np.vstack(all_actions)
+    #print("all_actions",len(all_actions))
+    #print("price_earth",len(price_earth))
+
     # смещаем на pred_lag
     df_signal = check_df[pred_lag:].copy()
+    #print("df_signal", df_signal.shape)
+
     df_signal['to_long']  = all_actions[:, 0]
     df_signal['to_short'] = all_actions[:, 1]
-    df_signal['pred_earth_price'] =  price_earth
+    df_signal['pred_earth_price'] = price_earth
     # берем чистые действия действия
     return  df_signal
