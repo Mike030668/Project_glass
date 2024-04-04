@@ -87,7 +87,8 @@ def making_signals(past_df: pd.DataFrame,
             check_data = past_df.copy()
         # далее отшипываем вначале 1 свечу
         else: #  и присоединяем в коней новую из изучаемого датафрейма
-            check_data = check_data[1:].append(check_df[i:i+1])
+            # check_data = check_data[1:].append(check_df[i:i+1]) old
+            check_data = pd.concat([check_data[1:], check_df[i:i+1]])
 
         price = check_data.Close[-1]
         last_state["last_price"] = price
