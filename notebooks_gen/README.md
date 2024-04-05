@@ -20,4 +20,5 @@
   После закрытия сессии, эти данный удвляться
 
 - для реальной работы нужно подклбчить GD
-  <img src="images/GD_colab_1.png" alt="png"  width="250"/> <img src="images/GD_colab_2.png" alt="png"  width="250"/>
+
+  <img src="images/GD_colab_2.png" alt="png"  width="250"/> <img src="images/GD_colab_1.png" alt="png"  width="250"/>
