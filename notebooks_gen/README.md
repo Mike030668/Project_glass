@@ -7,6 +7,10 @@
 - [трендовая](https://github.com/Mike030668/Project_glass/blob/master/notebooks_gen/train_gen_trend_model.ipynb)
 
 ##### как пользоваться?
-- настроено для работы в Colab
+- настроено для работы в Colab и GPU
 - изначально генетика стартует с данных на репозитории, которые были полученны поиском при работе над задачей
   <img src="images/gen_seach_1.png" alt="png"  width="400"/>
+  
+- можно стартавать с пустого состояния
+  <img src="images/gen_seach_2.png" alt="png"  width="400"/>
+  
