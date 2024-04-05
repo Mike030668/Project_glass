@@ -6,7 +6,7 @@
 - [ценовая](https://github.com/Mike030668/Project_glass/blob/master/notebooks_gen/gen_price_net_seach.ipynb)
 - [трендовая](https://github.com/Mike030668/Project_glass/blob/master/notebooks_gen/train_gen_trend_model.ipynb)
 
-##### как пользоваться?
+### как пользоваться?
 - настроено для работы в Colab и GPU
 - изначально генетика стартует с данных на репозитории, которые были полученны поиском при работе над задачей
   
