@@ -39,3 +39,9 @@
 
 ## Тестирование роботов
 - тестирование 3х роботов организовано в ноутбуках [Robot_1](https://github.com/Mike030668/Project_glass/blob/master/notebooks_gen/Robot_gen_1_testing.ipynb), [Robot_2](https://github.com/Mike030668/Project_glass/blob/master/notebooks_gen/Robot_gen_2_testing.ipynb), [Robot_3](https://github.com/Mike030668/Project_glass/blob/master/notebooks_gen/Robot_gen_3_testing.ipynb). Они аналогичны ноутбукам [Robot_1](https://github.com/Mike030668/Project_glass/blob/master/notebooks/Robot_1_testing.ipynb), [Robot_2](https://github.com/Mike030668/Project_glass/blob/master/notebooks/Robot_2_testing.ipynb), [Robot_3](https://github.com/Mike030668/Project_glass/blob/master/notebooks/Robot_3_testing.ipynb)
+  
+- изначально грузятся списки нвйденых сеток в процессе поиска при решения задачи по созданию репозитория. В каждой по 3 сетки
+  
+ <img src="images/load_nets.png" alt="png"  width="450"/>
+ 
+- для работы со своей папкой от поиска генетики нужно указать путь до них после подклбчения диска
