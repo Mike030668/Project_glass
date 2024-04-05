@@ -31,4 +31,11 @@
 ## После генетического поиска
 - в [ноутбуке](https://github.com/Mike030668/Project_glass/blob/master/notebooks_gen/train_gen_price_model.ipynb) производится генерация из списка `bestnets.npy` для ценовой сетки. Далее обучение как и в  [ноутбуке](https://github.com/Mike030668/Project_glass/blob/master/notebooks/train_predprice_model.ipynb)
 - в [ноутбуке](https://github.com/Mike030668/Project_glass/blob/master/notebooks_gen/train_gen_trend_model.ipynb) производится генерация из списка `bestnets.npy` для трендовой сетки. Далее обучение как и в  [ноутбуке](https://github.com/Mike030668/Project_glass/blob/master/notebooks/train_predtrend_model.ipynb)
-- 
+- обученная сетка также изначально сохраняется во временную папку проекта в Colab
+  
+  <img src="images/save_dir.png" alt="png"  width="450"/>
+
+- поэтому, для дальнейшего тестирования нужно сохранять в свою папку на диске
+
+## Тестирование роботов
+- тестирование 3х роботов организовано в ноутбуках [Robot_1](https://github.com/Mike030668/Project_glass/blob/master/notebooks_gen/Robot_gen_1_testing.ipynb), [Robot_2](https://github.com/Mike030668/Project_glass/blob/master/notebooks_gen/Robot_gen_2_testing.ipynb), [Robot_3](https://github.com/Mike030668/Project_glass/blob/master/notebooks_gen/Robot_gen_3_testing.ipynb). Они аналогичны ноутбукам [Robot_1](https://github.com/Mike030668/Project_glass/blob/master/notebooks/Robot_1_testing.ipynb), [Robot_2](https://github.com/Mike030668/Project_glass/blob/master/notebooks/Robot_2_testing.ipynb), [Robot_3](https://github.com/Mike030668/Project_glass/blob/master/notebooks/Robot_3_testing.ipynb)
