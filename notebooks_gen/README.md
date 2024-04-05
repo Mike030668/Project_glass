@@ -17,3 +17,7 @@
   <img src="images/gen_seach_2.png" alt="png"  width="400"/>
   
 - в обоих случаях пишется в копию репозиторя в Colab, скачаного ранее командой `!git clone https://github.com/Mike030668/Project_glass.git -q`
+  После закрытия сессии, эти данный удвляться
+
+- для реальной работы нужно подклбчить GD
+  <img src="images/GD_colab_1.png" alt="png"  width="250"/> <img src="images/GD_colab_2.png" alt="png"  width="250"/>
