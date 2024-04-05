@@ -9,4 +9,4 @@
 ##### как пользоваться?
 - настроено для работы в Colab
 - изначально генетика стартует с данных на репозитории, которые были полученны поиском при работе над задачей
-  <img src="Project_glass/images/gen_seach_1.png" alt="png"  width="400"/>
+  <img src="images/gen_seach_1.png" alt="png"  width="400"/>
