@@ -122,13 +122,12 @@ def making_signals(past_df: pd.DataFrame,
         pred_trend = tresh_trend(pred_trend, trsh_d = -0.1, trsh_u = 0.1)
         last_state["pred_trend"].append(pred_trend)
         trend_pred.append(pred_trend[0])
-
+        prices_pred.append(pred_price[0][0].astype(float))
+        
         if not i:
           # собираем историю pred_prices и price
           prices_pred_earth.append(pred_price[0][0].astype(float))
-          prices_pred.append(pred_price[0][0].astype(float))
-          
-
+         
         if i:
             last_state["pred_prices"] = last_state["pred_prices"][-2:]
             last_state["pred_trend"] = last_state["pred_trend"][-2:]
@@ -160,6 +159,11 @@ def making_signals(past_df: pd.DataFrame,
 
     # смещаем на pred_lag
     df_signal = check_df[pred_lag:].copy()
+
+    #print("prices_pred", len(prices_pred))
+    #print("prices_pred_earth", len(prices_pred_earth))
+    #print("trend_pred", len(trend_pred))
+    #print("df_signal", df_signal.shape)
 
     df_signal['to_long']  = all_actions[:, 0]
     df_signal['to_short'] = all_actions[:, 1]
