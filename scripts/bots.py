@@ -59,7 +59,7 @@ def cond_long (state,
             cond_1_t =  all(state["pred_prices"][-1][id_pr_up_tresh] - delta > cur_price*(100 + tresh_hold)/100)
         
         elif correct_price == "Aleksei":
-            cond_1_t =  all( cur_price*(100 + tresh_hold)/100 < cur_price - delta)
+            cond_1_t =  cur_price*(100 + tresh_hold)/100 < cur_price - delta
 
     # одобряем если нет контроля
     else:
@@ -101,7 +101,7 @@ def cond_long (state,
             cond_5_t =  all(state["pred_prices"][-1][id_tr_lw_tresh] - delta < cur_price*(100 - tresh_hold)/100)
 
          elif correct_price == "Aleksei":
-            cond_5_t =   all( cur_price*(100 + tresh_hold)/100 > cur_price - delta)
+            cond_5_t =   cur_price*(100 + tresh_hold)/100 > cur_price - delta
 
     # одобряем если нет контроля
     else:
@@ -194,7 +194,7 @@ def cond_short(state,
             cond_1_t =  all(state["pred_prices"][-1][id_pr_up_tresh] - delta < cur_price*(100 + tresh_hold)/100)
         
         elif correct_price == "Aleksei":
-            cond_1_t =  all( cur_price*(100 + tresh_hold)/100 > cur_price - delta)
+            cond_1_t =   cur_price*(100 + tresh_hold)/100 > cur_price - delta
 
     # одобряем если нет контроля
     else:
@@ -236,8 +236,8 @@ def cond_short(state,
             cond_5_t =  all(state["pred_prices"][-1][id_pr_up_tresh] - delta > cur_price*(100 + tresh_hold)/100)
 
         elif correct_price == "Aleksei":
-            cond_5_t =   all( cur_price*(100 + tresh_hold)/100 < cur_price - delta)
-            
+            cond_5_t =   cur_price*(100 + tresh_hold)/100 < cur_price - delta
+
     # одобряем если нет контроля
     else:
         cond_5_t = True
