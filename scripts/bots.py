@@ -29,26 +29,38 @@ def cond_long (state,
     # коррекция 0
     delta = 0
     # корректор предсказания цены от сравнения прошлого предсказание и текцщей цены
-    if correct_price == "cur_price":
+    if correct_price == "Michal":
         delta = state["pred_prices"][-2][0] - cur_price
+    
     # корректор предсказания цены от сравнения прошлого предсказание и текцщего предсказания следующей цены
-    elif correct_price == "pred_price":
+    elif correct_price == "Aleksei":
         delta = state["pred_prices"][-2][1] - state["pred_prices"][-1][0]
 
     # Вход лонг
     # Покупаем когда
     # контроль по цене если заданы индексы
     if len(id_pr_up):
-        # Сетка 1 показывает id_pr_up предсказаний выше текущей цены И
-        cond_1 =  all(state["pred_prices"][-1][id_pr_up] - delta > cur_price)
+        if correct_price == "Michal":
+            # Сетка 1 показывает id_pr_up предсказаний выше текущей цены И
+            cond_1 =  all(state["pred_prices"][-1][id_pr_up] - delta > cur_price)
+
+        elif correct_price == "Aleksei":
+            # текущая цена< приземленный прогноз
+            cond_1 =  cur_price < cur_price - delta 
+
     # одобряем если нет контроля
     else:
         cond_1 = True
 
     # контроль по цене c tresh_hold если заданы индексы
     if len(id_pr_up_tresh):
-        # Сетка 1 показывает id_pr_up предсказаний выше текущей цены И
-        cond_1_t =  all(state["pred_prices"][-1][id_pr_up_tresh] - delta > cur_price*(100 + tresh_hold)/100)
+        if correct_price == "Michal":
+             # Сетка 1 показывает id_pr_up предсказаний выше текущей цены И
+            cond_1_t =  all(state["pred_prices"][-1][id_pr_up_tresh] - delta > cur_price*(100 + tresh_hold)/100)
+        
+        elif correct_price == "Aleksei":
+            cond_1_t =  all( cur_price*(100 + tresh_hold)/100 < cur_price - delta)
+
     # одобряем если нет контроля
     else:
         cond_1_t = True
@@ -71,16 +83,26 @@ def cond_long (state,
     # Продаем позицию если
     # контроль по цене если заданы индексы
     if len(id_pr_lw):
-        # Сетка 1 показывает id_pr_lw предсказания ниже текущей цены И
-        cond_5 =  all(state["pred_prices"][-1][id_pr_lw] - delta < cur_price)
+        if correct_price == "Michal":
+            # Сетка 1 показывает id_pr_lw предсказания ниже текущей цены И
+            cond_5 =  all(state["pred_prices"][-1][id_pr_lw] - delta < cur_price)
+
+        elif correct_price == "Aleksei":
+            cond_5 =  cur_price > cur_price - delta 
+
     # одобряем если нет контроля
     else:
         cond_5 = True
 
     # контроль по цене c tresh_hold если заданы индексы
     if len(id_tr_lw_tresh):
-        # Сетка 1 показывает id_pr_up предсказаний выше текущей цены И
-        cond_5_t =  all(state["pred_prices"][-1][id_tr_lw_tresh] - delta < cur_price*(100 - tresh_hold)/100)
+         if correct_price == "Michal":
+            # Сетка 1 показывает id_pr_up предсказаний выше текущей цены И
+            cond_5_t =  all(state["pred_prices"][-1][id_tr_lw_tresh] - delta < cur_price*(100 - tresh_hold)/100)
+
+         elif correct_price == "Aleksei":
+            cond_5_t =   all( cur_price*(100 + tresh_hold)/100 > cur_price - delta)
+
     # одобряем если нет контроля
     else:
         cond_5_t = True
@@ -140,10 +162,11 @@ def cond_short(state,
     # коррекция 0
     delta = 0
     # корректор предсказания цены от сравнения прошлого предсказание и текцщей цены
-    if correct_price == "cur_price":
+    if correct_price == "Michal":
         delta = state["pred_prices"][-2][0] - cur_price
+    
     # корректор предсказания цены от сравнения прошлого предсказание и текцщего предсказания следующей цены
-    elif correct_price == "pred_price":
+    elif correct_price == "Aleksei":
         delta = state["pred_prices"][-2][1] - state["pred_prices"][-1][0]
 
     # Вход шорт
@@ -151,7 +174,14 @@ def cond_short(state,
      # контроль по цене если заданы индексы
     if len(id_pr_lw):
         # Сетка 1 показывает id_pr_lw предсказаний ниже текущей цены И
-        cond_1 =  all(state["pred_prices"][-1][id_pr_lw] - delta < cur_price)
+        if correct_price == "Michal":
+            # Сетка 1 показывает id_pr_up предсказаний выше текущей цены И
+            cond_1 =  all(state["pred_prices"][-1][id_pr_up] - delta < cur_price)
+
+        elif correct_price == "Aleksei":
+            # текущая цена< приземленный прогноз
+            cond_1 =  cur_price > cur_price - delta 
+
     # одобряем если нет контроля
     else:
         cond_1 = True
@@ -159,7 +189,13 @@ def cond_short(state,
     # контроль по цене c tresh_hold если заданы индексы
     if len(id_tr_lw_tresh):
         # Сетка 1 показывает id_pr_lw предсказаний ниже текущей цены И
-        cond_1_t =  all(state["pred_prices"][-1][id_tr_lw_tresh] - delta < cur_price*(100 - tresh_hold)/100)
+        if correct_price == "Michal":
+             # Сетка 1 показывает id_pr_up предсказаний выше текущей цены И
+            cond_1_t =  all(state["pred_prices"][-1][id_pr_up_tresh] - delta < cur_price*(100 + tresh_hold)/100)
+        
+        elif correct_price == "Aleksei":
+            cond_1_t =  all( cur_price*(100 + tresh_hold)/100 > cur_price - delta)
+
     # одобряем если нет контроля
     else:
         cond_1_t = True
@@ -182,16 +218,26 @@ def cond_short(state,
     # Продаем позицию если
     # контроль по цене если заданы индексы
     if len(id_pr_up):
-        # Сетка 1 показывает id_pr_up предсказания выше текущей цены  И
-        cond_5 =  all(state["pred_prices"][-1][id_pr_up] - delta > cur_price)
+        if correct_price == "Michal":
+            # Сетка 1 показывает id_pr_up предсказания выше текущей цены  И
+            cond_5 =  all(state["pred_prices"][-1][id_pr_up] - delta > cur_price)
+
+        elif correct_price == "Aleksei":
+            cond_5 =  cur_price > cur_price - delta 
+
     # одобряем если нет контроля
     else:
         cond_5 = True
 
     # контроль по цене c tresh_hold если заданы индексы
     if len(id_pr_up_tresh):
-        # Сетка 1 показывает id_pr_up_tresh предсказания выше текущей цены  И
-        cond_5_t =  all(state["pred_prices"][-1][id_pr_up_tresh] - delta > cur_price*(100 + tresh_hold)/100)
+        if correct_price == "Michal":
+            # Сетка 1 показывает id_pr_up_tresh предсказания выше текущей цены  И
+            cond_5_t =  all(state["pred_prices"][-1][id_pr_up_tresh] - delta > cur_price*(100 + tresh_hold)/100)
+
+        elif correct_price == "Aleksei":
+            cond_5_t =   all( cur_price*(100 + tresh_hold)/100 < cur_price - delta)
+            
     # одобряем если нет контроля
     else:
         cond_5_t = True

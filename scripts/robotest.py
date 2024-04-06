@@ -121,12 +121,13 @@ def making_signals(past_df: pd.DataFrame,
         pred_trend = model_trend.predict(to_pred_trend, verbose=False)[0].astype(float)
         pred_trend = tresh_trend(pred_trend, trsh_d = -0.1, trsh_u = 0.1)
         last_state["pred_trend"].append(pred_trend)
+        trend_pred.append(pred_trend[0])
 
         if not i:
           # собираем историю pred_prices и price
           prices_pred_earth.append(pred_price[0][0].astype(float))
           prices_pred.append(pred_price[0][0].astype(float))
-          trend_pred.append(pred_trend[0])
+          
 
         if i:
             last_state["pred_prices"] = last_state["pred_prices"][-2:]
@@ -139,17 +140,17 @@ def making_signals(past_df: pd.DataFrame,
             # коррекция 0
             delta = 0
             # корректор предсказания цены от сравнения прошлого предсказание и текцщей цены
-            if used_correction == "cur_price":
+            if used_correction == "Michal":
                 delta = last_state["pred_prices"][-2][0] -  price
+                # собираем историю pred_prices и price
+                prices_pred_earth.append(float(pred_price[0][0].astype(float) - delta))
+
             # корректор предсказания цены от сравнения прошлого предсказание и текцщего предсказания следующей цены
-            elif used_correction == "pred_price":
-                delta = last_state["pred_prices"][-2][1] - last_state["pred_prices"][-1][0]
-
-            # собираем историю pred_prices и price
-            prices_pred_earth.append(float(pred_price[0][0].astype(float) - delta))
-            prices_pred.append(pred_price[0][0].astype(float))
-            trend_pred.append(pred_trend[0])
-
+            elif used_correction == "Aleksei":
+                delta = last_state["pred_prices"][0][0] - last_state["pred_prices"][1][0]
+                # собираем историю pred_prices и price
+                prices_pred_earth.append(price - delta)
+                
             if show_unique_signals:
                   # раскомитить чтобы выводило to_action
                   if sum(to_action): print(to_action)
